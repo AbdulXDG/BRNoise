@@ -1,0 +1,151 @@
+<Window x:Class="FluentNoise.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FluentNoise"
+        mc:Ignorable="d"
+        Title="Fluent Noise" Height="760" Width="1200" Background="#202020" WindowStartupLocation="CenterScreen">
+  <DockPanel>
+    <!-- Top Command Bar -->
+    <Grid DockPanel.Dock="Top" Background="#2B2B2B" Padding="10">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button x:Name="PlayBtn" Click="PlayBtn_Click" Content="▶ Play"/>
+        <Button x:Name="PauseBtn" Click="PauseBtn_Click" Content="⏸ Pause"/>
+        <Button x:Name="ResetBtn" Click="ResetBtn_Click" Content="⟲ Reset"/>
+      </StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
+        <TextBlock VerticalAlignment="Center" Text="Preset:"/>
+        <ComboBox x:Name="PresetCombo" Width="220" SelectionChanged="PresetCombo_SelectionChanged"/>
+        <TextBlock VerticalAlignment="Center" Text="iEQ:"/>
+        <ComboBox x:Name="EqCombo" Width="140" SelectionChanged="EqCombo_SelectionChanged">
+          <ComboBoxItem Content="None" IsSelected="True"/>
+          <ComboBoxItem Content="Balanced"/>
+          <ComboBoxItem Content="Full"/>
+        </ComboBox>
+        <Button Click="ApplyEqToSliders_Click" Content="Apply to Sliders"/>
+      </StackPanel>
+      <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8">
+        <TextBlock VerticalAlignment="Center" Text="Vol"/>
+        <Slider x:Name="VolumeSlider" Minimum="0" Maximum="1" Value="0.6" Width="120" ValueChanged="VolumeSlider_ValueChanged"/>
+        <Button Click="SaveProfile_Click" Content="Save"/>
+        <Button Click="LoadProfile_Click" Content="Load"/>
+      </StackPanel>
+    </Grid>
+
+    <!-- Content -->
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+      </Grid.RowDefinitions>
+
+      <!-- Controls -->
+      <Border Margin="10" Padding="10" CornerRadius="14" Background="#262626">
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+          </Grid.ColumnDefinitions>
+
+          <!-- Frequency Sliders -->
+          <StackPanel>
+            <TextBlock FontSize="16" Text="Frequency Bands" Margin="4"/>
+            <UniformGrid Columns="8">
+              <StackPanel>
+                <TextBlock Text="60 Hz" HorizontalAlignment="Center"/>
+                <Slider x:Name="S60" Minimum="-18" Maximum="18" Value="0" ValueChanged="BandSlider_ValueChanged"/>
+              </StackPanel>
+              <StackPanel>
+                <TextBlock Text="125 Hz" HorizontalAlignment="Center"/>
+                <Slider x:Name="S125" Minimum="-18" Maximum="18" Value="0" ValueChanged="BandSlider_ValueChanged"/>
+              </StackPanel>
+              <StackPanel>
+                <TextBlock Text="250 Hz" HorizontalAlignment="Center"/>
+                <Slider x:Name="S250" Minimum="-18" Maximum="18" Value="0" ValueChanged="BandSlider_ValueChanged"/>
+              </StackPanel>
+              <StackPanel>
+                <TextBlock Text="500 Hz" HorizontalAlignment="Center"/>
+                <Slider x:Name="S500" Minimum="-18" Maximum="18" Value="0" ValueChanged="BandSlider_ValueChanged"/>
+              </StackPanel>
+              <StackPanel>
+                <TextBlock Text="1 kHz" HorizontalAlignment="Center"/>
+                <Slider x:Name="S1k" Minimum="-18" Maximum="18" Value="0" ValueChanged="BandSlider_ValueChanged"/>
+              </StackPanel>
+              <StackPanel>
+                <TextBlock Text="2 kHz" HorizontalAlignment="Center"/>
+                <Slider x:Name="S2k" Minimum="-18" Maximum="18" Value="0" ValueChanged="BandSlider_ValueChanged"/>
+              </StackPanel>
+              <StackPanel>
+                <TextBlock Text="4 kHz" HorizontalAlignment="Center"/>
+                <Slider x:Name="S4k" Minimum="-18" Maximum="18" Value="0" ValueChanged="BandSlider_ValueChanged"/>
+              </StackPanel>
+              <StackPanel>
+                <TextBlock Text="8 kHz" HorizontalAlignment="Center"/>
+                <Slider x:Name="S8k" Minimum="-18" Maximum="18" Value="0" ValueChanged="BandSlider_ValueChanged"/>
+              </StackPanel>
+            </UniformGrid>
+          </StackPanel>
+
+          <!-- Stereo / Tape -->
+          <StackPanel Grid.Column="1">
+            <TextBlock FontSize="16" Text="Stereo & Tape" Margin="4"/>
+            <TextBlock Text="Stereo Width"/>
+            <ComboBox x:Name="StereoCombo" SelectionChanged="StereoCombo_SelectionChanged">
+              <ComboBoxItem Content="Mono"/>
+              <ComboBoxItem Content="Narrow"/>
+              <ComboBoxItem Content="Normal" IsSelected="True"/>
+              <ComboBoxItem Content="Wide"/>
+            </ComboBox>
+
+            <TextBlock Text="Tape Speed"/>
+            <StackPanel Orientation="Horizontal">
+              <Button Content="Slower" Click="Slower_Click"/>
+              <Button Content="Faster" Click="Faster_Click"/>
+              <Button Content="Alternate" Click="Alternate_Click"/>
+              <Button Content="Reset" Click="ResetSpeed_Click"/>
+            </StackPanel>
+
+            <TextBlock Text="Speed Multiplier"/>
+            <Slider x:Name="SpeedSlider" Minimum="0.5" Maximum="2.0" Value="1.0" SmallChange="0.01" LargeChange="0.1"
+                    TickFrequency="0.1" IsSnapToTickEnabled="True" ValueChanged="SpeedSlider_ValueChanged"/>
+          </StackPanel>
+
+          <!-- Animation Parameters -->
+          <StackPanel Grid.Column="2">
+            <TextBlock FontSize="16" Text="Animation Parameters" Margin="4"/>
+            <TextBlock Text="Mode"/>
+            <ComboBox x:Name="ModeCombo" SelectionChanged="ModeCombo_SelectionChanged">
+              <ComboBoxItem Content="Soft"/>
+              <ComboBoxItem Content="Hard"/>
+              <ComboBoxItem Content="Solo Duo"/>
+              <ComboBoxItem Content="Trio"/>
+            </ComboBox>
+
+            <TextBlock Text="Range"/>
+            <ComboBox x:Name="RangeCombo" SelectionChanged="RangeCombo_SelectionChanged">
+              <ComboBoxItem Content="Low"/>
+              <ComboBoxItem Content="Normal" IsSelected="True"/>
+              <ComboBoxItem Content="High"/>
+            </ComboBox>
+
+            <TextBlock Text="Auto Animate Bands"/>
+            <ToggleButton x:Name="AnimateToggle" Content="Animate" Checked="AnimateToggle_Checked" Unchecked="AnimateToggle_Unchecked"/>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- Footer -->
+      <StackPanel Grid.Row="1" Orientation="Vertical" Margin="10" Spacing="8">
+        <TextBlock Text="User Stories (sample)" FontWeight="SemiBold" FontSize="16"/>
+        <TextBlock Text="Use this app to focus, relax, mask background noise, or aid sleep."/>
+      </StackPanel>
+    </Grid>
+  </DockPanel>
+</Window>
